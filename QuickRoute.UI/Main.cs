@@ -83,8 +83,6 @@ namespace QuickRoute.UI
 
       InitializeComponent();
 
-      Util.CheckForNewVersion();
-
       // Display the splash screen
       //SplashScreen SplashScreen = new SplashScreen();
       //SplashScreen.Show();
@@ -751,7 +749,7 @@ namespace QuickRoute.UI
       // 2. use kml export property dialog (or rather embedded user control)
       // 3. use some color range property selector user control (color coding attribute, gradient, intervals, etc)
 
-      //var files = Directory.GetFiles(@"c:\Orientering\GPS\Träning", "*.qrt");
+      //var files = Directory.GetFiles(@"c:\Orientering\GPS\Trï¿½ning", "*.qrt");
       //CreateKmz(files, stream, kmlPropertySelector.Properties);
     }
 
