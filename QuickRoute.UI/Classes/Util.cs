@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Windows.Forms;
 using QuickRoute.BusinessEntities;
 using QuickRoute.BusinessEntities.Numeric;
 using QuickRoute.Common;
 using QuickRoute.Resources;
 using QuickRoute.UI.Forms;
-using QuickRoute.UI.QuickRouteServer;
 using ExceptionMessageBox=QuickRoute.UI.Forms.ExceptionMessageBox;
 
 namespace QuickRoute.UI.Classes
@@ -303,62 +298,6 @@ namespace QuickRoute.UI.Classes
     {
       var messageBox = new ExceptionMessageBox(title, exception);
       return messageBox.ShowDialog();
-    }
-  
-    public static void CheckForNewVersion()
-    {
-      var languageString = (ApplicationSettings.UiCulture == null ? "" : ApplicationSettings.UiCulture.ToString());
-      var request = new GetCurrentVersionRequest() { UserVersion = Application.ProductVersion, UserLanguage = languageString}; 
-      var server = new QuickRouteServer.QuickRouteServer();
-      server.GetCurrentVersionCompleted += GetCurrentVersionFromServerCompleted;
-      try
-      {
-        server.GetCurrentVersionAsync(request);
-      }
-      catch(Exception)
-      {
-        // probably no connection to Internet
-      }
-    }
-
-    private static void GetCurrentVersionFromServerCompleted(object sender, GetCurrentVersionCompletedEventArgs e)
-    {
-      try
-      {
-        var currentVersion = new Version(e.Result.CurrentVersion);
-        if (currentVersion > new Version(Application.ProductVersion))
-        {
-          // there is a new version
-          // display message?
-          if (!ApplicationSettings.DontRemindAboutVersions.Contains(currentVersion.ToString()))
-          {
-            var message = string.Format(Strings.NewVersionAvailable, currentVersion) + "\r\n\r\n";
-            if (e.Result.Features != null && e.Result.Features.Length > 0)
-            {
-              message += Strings.NewVersionFeatures;
-              foreach (var feature in e.Result.Features)
-              {
-                var tagsStripped = Regex.Replace(feature, "<.*?>", string.Empty);
-                message += "\r\n" + "* " + HttpUtility.UrlDecode(tagsStripped);
-              }
-            }
-
-            using (var dlg = new NewVersionDialog()
-                        {
-                          Message = message,
-                          DownloadUrl = e.Result.DownloadUrl
-                        })
-            {
-              dlg.ShowDialog();
-              if (dlg.DontRemindMe) ApplicationSettings.DontRemindAboutVersions.Add(currentVersion.ToString());
-            }
-          }
-        }
-      }
-      catch(Exception)
-      {
-        // probably no connection to Internet
-      }
     }
   }
 }
