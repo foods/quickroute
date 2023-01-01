@@ -1798,6 +1798,7 @@ namespace QuickRoute.UI
         {
           count++;
           string numberString = (count == 10 ? "1&0" : "&" + count);
+          var shortened = Util.PathShortener(fn, 25).Replace("&", "&&");
           ToolStripMenuItem tsmi = new ToolStripMenuItem(numberString + " " + Util.PathShortener(fn, 50).Replace("&", "&&"));
           tsmi.Click += RecentDocumentClicked;
           tsmi.Tag = "RecentFile_" + fn;
