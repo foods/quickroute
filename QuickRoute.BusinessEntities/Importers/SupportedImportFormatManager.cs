@@ -6,16 +6,11 @@ using System.Windows.Forms;
 using QuickRoute.BusinessEntities.Importers;
 using QuickRoute.BusinessEntities.Importers.FIT;
 using QuickRoute.BusinessEntities.Importers.FRWD;
-using QuickRoute.BusinessEntities.Importers.Garmin.Forerunner;
-using QuickRoute.BusinessEntities.Importers.Garmin.ANTAgent;
 using QuickRoute.BusinessEntities.Importers.Navilock;
 using QuickRoute.BusinessEntities.Importers.Polar.ProTrainer;
 using QuickRoute.BusinessEntities.Importers.GPX;
 using QuickRoute.BusinessEntities.Importers.QuickRoute;
 using QuickRoute.BusinessEntities.Importers.TCX;
-using QuickRoute.BusinessEntities.Importers.GlobalSat.GH615M;
-using QuickRoute.BusinessEntities.Importers.JJConnect.RegistratorSE;
-using QuickRoute.GPSDeviceReaders.GarminUSBReader;
 using QuickRoute.Resources;
 using Wintellect.PowerCollections;
 
@@ -33,32 +28,6 @@ namespace QuickRoute.BusinessEntities.Importers
     public static List<GPSDevice> GetSupportedGPSDevices()
     {
       var supportedGPSDevices = new List<GPSDevice>();
-
-      // Garmin Forerunner
-      supportedGPSDevices.Add(new GPSDevice(new GarminForerunnerUSBImporter()));
-
-      // GlobalSat GH-615M
-      supportedGPSDevices.Add(new GPSDevice(new GlobalSatGH615MImporter()));
-
-      // JJ-Connect Registrator SE
-      supportedGPSDevices.Add(new GPSDevice(new JJConnectRegistratorSEImporter()));
-
-      // Garmin ANT Agent
-      GarminANTAgentImporter antImporter = new GarminANTAgentImporter();
-      antImporter.Path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\GARMIN\Devices\";
-      GPSDevice antDevice = new GPSDevice(antImporter);
-      supportedGPSDevices.Add(antDevice);
-
-      // Polar ProTrainer
-      var polarProTrainerImporter = new PolarProTrainerImporter();
-      polarProTrainerImporter.Paths = new List<string>
-                                        {
-                                          GetProgramFilesPath() + @"\Polar\Polar ProTrainer\",
-                                          Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\VirtualStore\Program Files\Polar\Polar ProTrainer\",
-                                        };
-      GPSDevice polarProTrainerDevice = new GPSDevice(polarProTrainerImporter);
-      supportedGPSDevices.Add(polarProTrainerDevice);
-
       return supportedGPSDevices;
     }
 

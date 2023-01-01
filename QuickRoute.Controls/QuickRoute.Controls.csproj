@@ -120,18 +120,10 @@
     <Compile Include="ScrollableLabel.Designer.cs">
       <DependentUpon>ScrollableLabel.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolstripColorRangeIntervalSlider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ToolstripCustomUpDown.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ToolstripNumericUpDown.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ToolstripTrackBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ToolstripColorRangeIntervalSlider.cs" />
+    <Compile Include="ToolstripCustomUpDown.cs" />
+    <Compile Include="ToolstripNumericUpDown.cs" />
+    <Compile Include="ToolstripTrackBar.cs" />
     <Compile Include="ZoomWindow.cs">
       <SubType>UserControl</SubType>
     </Compile>

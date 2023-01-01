@@ -122,14 +122,11 @@
     <Compile Include="Importers\FileFormat.cs" />
     <Compile Include="Importers\FIT\FITImporter.cs" />
     <Compile Include="Importers\FIT\FITUtil.cs" />
-    <Compile Include="Importers\GlobalSat\GH615M\GlobalSatGH615MImporter.cs" />
     <Compile Include="Importers\GPSDevice.cs" />
-    <Compile Include="Importers\JJConnect\RegistratorSE\JJConnectRegistratorSEImporter.cs" />
     <Compile Include="Importers\Polar\PolarHRMImporter.cs" />
     <Compile Include="Importers\Navilock\NavilockImporter.cs" />
     <Compile Include="Importers\Polar\ProTrainer\PolarProTrainerImporter.cs" />
     <Compile Include="Importers\FRWD\FRWDImporter.cs" />
-    <Compile Include="Importers\Garmin\Forerunner\GarminForerunnerUSBImporter.cs" />
     <Compile Include="Importers\GPX\GPX10\gpx1.0.cs" />
     <Compile Include="Importers\GPX\GPXUtil.cs" />
     <Compile Include="Importers\ImportError.cs" />
@@ -148,15 +145,12 @@
     <Compile Include="Importers\SessionSelector.Designer.cs">
       <DependentUpon>SessionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="Importers\Garmin\ANTAgent\ANTDevice.cs" />
-    <Compile Include="Importers\Garmin\ANTAgent\GarminANTAgentImporter.cs" />
     <Compile Include="General.cs" />
     <Compile Include="GeneralMatrix.cs" />
     <Compile Include="Gradient.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="HandleCollection.cs" />
-    <Compile Include="Importers\Garmin\ANTAgent\HistoryItem.cs" />
     <Compile Include="Importers\GPX\GPXImporter.cs" />
     <Compile Include="Importers\IGPSDeviceImporter.cs" />
     <Compile Include="Importers\ImportResult.cs" />
@@ -418,18 +412,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GPSDeviceReaders\GarminUSBReader\GarminUSBReader.csproj">
-      <Project>{FFEC4820-9B6B-47E9-8594-B71A52081C1E}</Project>
-      <Name>GarminUSBReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GPSDeviceReaders\GlobalSatGH615MReader\GlobalSatGH615MReader.csproj">
-      <Project>{81633CC3-9C5E-4C93-A9A6-876F6AE40883}</Project>
-      <Name>GlobalSatGH615MReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GPSDeviceReaders\JJConnectRegistratorSEReader\JJConnectRegistratorSEReader.csproj">
-      <Project>{E91D684B-2DD8-4C50-8111-1940BFB427EE}</Project>
-      <Name>JJConnectRegistratorSEReader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\QuickRoute.Common\QuickRoute.Common.csproj">
       <Project>{7F93415F-ACEB-4B4F-8E6B-51D0B096F38E}</Project>
       <Name>QuickRoute.Common</Name>
@@ -480,9 +462,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Importers\GlobalSat\GH615M\toGPX.xsl" />
-    <Content Include="Importers\GlobalSat\icon.ico" />
-    <Content Include="Importers\GlobalSat\icon.png" />
     <None Include="Web References\WinSplitsWebService\WebServices.disco" />
   </ItemGroup>
   <ItemGroup>
