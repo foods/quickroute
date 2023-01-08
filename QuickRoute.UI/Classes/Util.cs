@@ -124,7 +124,7 @@ namespace QuickRoute.UI.Classes
 
     public static string PathShortener(string path, int length)
     {
-      var sb = new StringBuilder();
+      var sb = new StringBuilder(length * 4);
       PathCompactPathEx(sb, path, length, 0);
       return sb.ToString();
     }

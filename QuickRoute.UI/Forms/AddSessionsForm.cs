@@ -5,11 +5,6 @@ using System.Windows.Forms;
 using QuickRoute.BusinessEntities;
 using System.IO;
 using QuickRoute.BusinessEntities.Importers;
-using QuickRoute.BusinessEntities.Importers.FRWD;
-using QuickRoute.BusinessEntities.Importers.Garmin.Forerunner;
-using QuickRoute.BusinessEntities.Importers.Garmin.ANTAgent;
-using QuickRoute.BusinessEntities.Importers.GPX;
-using QuickRoute.BusinessEntities.Importers.TCX;
 using QuickRoute.Resources;
 using QuickRoute.UI.Classes;
 

@@ -127,7 +127,7 @@ namespace QuickRoute.Publishers.DOMAPublisher
         {
           Success = response.Success,
           ErrorMessage = response.ErrorMessage,
-          URL = response.URL
+          Url = response.URL
         };
       }
       catch (Exception ex)
@@ -181,7 +181,7 @@ namespace QuickRoute.Publishers.DOMAPublisher
         {
           Success = response.Success,
           ErrorMessage = response.ErrorMessage,
-          URL = response.URL
+          Url = response.URL
         };
       }
       catch (Exception ex)

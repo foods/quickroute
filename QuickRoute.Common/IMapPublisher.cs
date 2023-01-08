@@ -31,12 +31,25 @@ namespace QuickRoute.Common
     public byte[] MapImageData { get; set; }
     public byte[] BlankMapImageData { get; set; }
     public string MapImageFileExtension { get; set; }
+    public Coordinate[] MapCorners { get; set; }
+    public Coordinate MapCenter { get; set; }
+    
+    public DateTime? SessionStartTime { get; set; }
+    public DateTime? SessionEndTime { get; set; }
+    public double Distance { get; set; }
+    public double ElapsedTime { get; set; }
 
     public override string ToString()
     {
       return Name + 
         (Date != DateTime.MinValue ? " [" + Date.ToShortDateString() + "]" : "");
     }
+  }
+
+  public class Coordinate
+  {
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
   }
 
   public class Category
@@ -57,7 +70,7 @@ namespace QuickRoute.Common
   {
     public bool Success { get; set; }
     public string ErrorMessage { get; set; }
-    public string URL { get; set; }
+    public string Url { get; set; }
   }
 
   public class GetAllMapsResult

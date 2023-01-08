@@ -13,12 +13,10 @@ using System.Windows.Forms;
 using QuickRoute.BusinessEntities;
 using QuickRoute.BusinessEntities.Actions;
 using QuickRoute.BusinessEntities.Exporters;
-using QuickRoute.BusinessEntities.Importers.Garmin.Forerunner;
 using QuickRoute.BusinessEntities.Numeric;
 using QuickRoute.BusinessEntities.RouteProperties;
 using QuickRoute.Common;
 using QuickRoute.Controls;
-using QuickRoute.GPSDeviceReaders.GarminUSBReader;
 using QuickRoute.UI.Classes;
 using QuickRoute.UI.Forms;
 using System.IO;
@@ -140,35 +138,7 @@ namespace QuickRoute.UI
         OpenInGoogleEarthFromCommandLine(Environment.GetCommandLineArgs()[2]);
       }
 
-      SetupGarminUSBReader();
-
       startingUpNow = false;
-    }
-
-    private void SetupGarminUSBReader()
-    {
-      GarminUSBReader.Instance.CacheDirectory = Path.Combine(CommonUtil.GetApplicationDataPath(), "GarminUSBReaderCache");
-      ReadGarminUSBData();
-    }
-
-    private bool garminUSBLastConnectionState;
-    private void ReadGarminUSBData()
-    {
-      var autoread = ConfigurationManager.AppSettings["autoreadGarminUSBData"];
-      if(autoread != null)
-      {
-        bool b;
-        bool.TryParse(autoread, out b);
-        if(b)
-        {
-          var isConnected = GarminUSBReader.Instance.IsConnected;
-          if (isConnected && !garminUSBLastConnectionState && !GarminUSBReader.Instance.ReadingNow)
-          {
-            GarminUSBReader.Instance.BeginReadData();
-          }
-          garminUSBLastConnectionState = isConnected;
-        }
-      }
     }
 
     ~Main()
@@ -1828,6 +1798,7 @@ namespace QuickRoute.UI
         {
           count++;
           string numberString = (count == 10 ? "1&0" : "&" + count);
+          var shortened = Util.PathShortener(fn, 25).Replace("&", "&&");
           ToolStripMenuItem tsmi = new ToolStripMenuItem(numberString + " " + Util.PathShortener(fn, 50).Replace("&", "&&"));
           tsmi.Click += RecentDocumentClicked;
           tsmi.Tag = "RecentFile_" + fn;
@@ -2302,15 +2273,6 @@ namespace QuickRoute.UI
         }
       }
 
-    }
-
-    protected override void WndProc(ref Message message)
-    {
-      if (message.Msg == 0x219 && (int)message.WParam == 0x07)
-      {
-        ReadGarminUSBData();
-      }
-      base.WndProc(ref message);
     }
 
     private void canvas_DocumentChanged(object sender, EventArgs e)

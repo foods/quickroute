@@ -64,11 +64,11 @@ namespace QuickRoute.BusinessEntities.Exporters
       Properties = new ImageExporterProperties {SessionSettings = new SessionSettings()};
     }
 
-    public void Export()
+    public LongLat[] Export()
     {
       CreateImage();
       SetExifData();
-      SetQuickRouteExtensionData();
+      return SetQuickRouteExtensionData();
     }
 
     private void CreateImage()
@@ -257,7 +257,7 @@ namespace QuickRoute.BusinessEntities.Exporters
       exif.SetPropertyString((int)ExifWorks.ExifWorks.TagNames.SoftwareUsed, Strings.QuickRoute + " " + Document.GetVersionString());
     }
 
-    private void SetQuickRouteExtensionData()
+    private LongLat[] SetQuickRouteExtensionData()
     {
       if (Properties.EncodingInfo.Encoder.MimeType == "image/jpeg")
       {
@@ -266,11 +266,14 @@ namespace QuickRoute.BusinessEntities.Exporters
           Image.Save(tmpStream, Properties.EncodingInfo.Encoder, Properties.EncodingInfo.EncoderParams);
           var ed = QuickRouteJpegExtensionData.FromImageExporter(this);
           ed.EmbedDataInImage(tmpStream, OutputStream);
+          return ed.ImageCornerPositions;
         }
       }
       else
       {
         Image.Save(OutputStream, Properties.EncodingInfo.Encoder, Properties.EncodingInfo.EncoderParams);
+        var ed = QuickRouteJpegExtensionData.FromImageExporter(this);
+        return ed.ImageCornerPositions;
       }
     }
 
