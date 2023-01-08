@@ -334,7 +334,6 @@
       // 
       // PublishMapForm
       // 
-      this.AcceptButton = this.ok;
       resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.cancel;
