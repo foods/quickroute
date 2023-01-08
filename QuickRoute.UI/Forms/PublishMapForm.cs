@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using QuickRoute.BusinessEntities;
 using QuickRoute.BusinessEntities.Exporters;
+using QuickRoute.BusinessEntities.Publishers;
+using QuickRoute.BusinessEntities.RouteProperties;
 using QuickRoute.Common;
 using QuickRoute.Resources;
 using QuickRoute.UI.Classes;
+using ElapsedTime = QuickRoute.BusinessEntities.RouteProperties.ElapsedTime;
 
 namespace QuickRoute.UI.Forms
 {
   public partial class PublishMapForm : Form
   {
     private List<MapInfo> allMaps = new List<MapInfo>();
-    private readonly IMapPublisher mapPublisher = new Publishers.DOMAPublisher.DOMAPublisher();
+    private readonly IMapPublisher mapPublisher = new RestApiPublisher();
     private readonly Document document;
     private readonly ColorRangeProperties colorRangeProperties;
     private readonly WaypointAttribute colorCodingAttribute;
@@ -182,7 +187,7 @@ namespace QuickRoute.UI.Forms
       Cursor = Cursors.Default;
       if (result.Success)
       {
-        var message = string.Format(Strings.MapPublish_Success, result.URL);
+        var message = string.Format(Strings.MapPublish_Success, result.Url);
         MessageBox.Show(message, Strings.MapPublish_SuccessTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
         Close();
       }
@@ -256,8 +261,13 @@ namespace QuickRoute.UI.Forms
           {
             Properties = imageExporterProperties 
           };
-          imageExporter.Export();
+          var corners = imageExporter.Export();
           mapInfo.MapImageData = ms.ToArray();
+          mapInfo.MapCorners = TranslateLongLat(corners);
+          var center = new LongLat();
+          center = document.GetMapCornersLongLat().Aggregate(center, (current, corner) => current + corner / 4);
+          mapInfo.MapCenter = new Coordinate { Latitude = center.Latitude, Longitude = center.Longitude };
+          AddSessionInfo(document.Sessions, mapInfo);
         }
 
         // blank map image
@@ -279,6 +289,37 @@ namespace QuickRoute.UI.Forms
         return mapInfo;
       }
       return null;
+    }
+
+    /// <summary>
+    /// Adds some session info if there is only a single session
+    /// </summary>
+    private void AddSessionInfo(SessionCollection sessions, MapInfo mapInfo)
+    {
+      if (sessions.Count != 1)
+        return;
+      var session = sessions.First();
+
+      var stopLap = session.Laps.FirstOrDefault(l => l.LapType == LapType.Stop);
+
+      if (stopLap == null)
+        return;
+      
+      var lapPl = session.Route.GetParameterizedLocationFromTime(stopLap.Time, ParameterizedLocation.Start, ParameterizedLocation.Direction.Forward);
+      RetrieveExternalPropertyDelegate dlg = new ExternalRoutePropertyRetriever(session.Settings).RetrieveExternalProperty;
+      if (Activator.CreateInstance(typeof (RouteDistance), session, new RouteLocations(ParameterizedLocation.Start, lapPl), dlg) is RouteProperty routeDistance)
+        mapInfo.Distance = (double)routeDistance.Value;
+
+      if (Activator.CreateInstance(typeof(ElapsedTime), session, new RouteLocations(ParameterizedLocation.Start, lapPl), dlg) is RouteProperty elapsedTime)
+      {
+        mapInfo.ElapsedTime = ((TimeSpan)elapsedTime.Value).TotalSeconds;
+
+        if (Activator.CreateInstance(typeof(Time), session, new RouteLocations(ParameterizedLocation.Start, lapPl), dlg) is RouteProperty time)
+        {
+          mapInfo.SessionEndTime = (DateTime)time.Value;
+          mapInfo.SessionStartTime = mapInfo.SessionEndTime.Value.AddSeconds(-mapInfo.ElapsedTime);
+        }
+      }
     }
 
     private void Connect()
@@ -410,6 +451,12 @@ namespace QuickRoute.UI.Forms
       resultListUrl.Text = mapInfo.ResultListUrl;
       comment.Text = mapInfo.Comment;
     }
+
+    private Coordinate[] TranslateLongLat(IEnumerable<LongLat> corners) => corners.Select(c => new Coordinate
+      {
+        Latitude = c.Latitude,
+        Longitude = c.Longitude
+      }).ToArray();
 
     private void SaveConnectionSettings()
     {
